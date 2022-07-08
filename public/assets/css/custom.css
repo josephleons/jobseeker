@@ -1,0 +1,51 @@
+
+body{
+    font-family: 'Arial' serif;
+    background-color: #f4f4f4;
+    
+
+}
+.cus{
+    background-color:#30BCED ;
+    cursor: pointer;
+    border:none;
+}
+.login{
+    background-color:#F56565 ;
+    cursor: pointer;
+    border:none;
+    
+}
+/* .cus:hover{
+    background-color:#30BCED ;
+    cursor: pointer;
+    border:none;
+    
+} */
+.title{
+    color:#30BCED;
+    font-size:24px;
+}
+.car card{
+    box-shadow: 3px 4px 1px -1px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 3px 4px 1px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 4px 1px -1px rgba(0,0,0,0.75);
+}
+.icons{
+    margin:2px;
+    width:2%;
+    height: 2%;
+    font-size: 4rem; 
+    color: cornflowerblue;
+}
+.style{
+    color:#2D3748;
+}
+.p{
+   padding-top:20px;
+   text-transform: capitalize;
+   font-family:sans-serif;
+}
+.close{
+    color: #F56565;
+}
