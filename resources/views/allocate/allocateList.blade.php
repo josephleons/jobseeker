@@ -7,7 +7,9 @@
             @foreach($allocates as $allocate)
             <div class="card-body">
                 <p class="fs-4 text-success text-capitalize fw-bold">Congratulation <mark>{{$allocate->firstname}}
-                        {{$allocate->middlename}} {{$allocate->lastname}}</mark> You have Allocated
+                    {{$allocate->id}} {{$allocate->lastname}}
+                </mark>
+                    You have Allocated
                     to {{$allocate->allocateTo}} Organization</p>
                 <p class="fs-4 text-success fst-italic">check your Email address for more Information
                     {{$allocate->email}}

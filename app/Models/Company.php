@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model
 {
     use HasFactory;
+    public $timestamps =false;
     
-    public function company(){
-        return $this->belongsTo('App\Models\User');
+    public function posts(){
+        return $this->hasMany(Post::class,'companies_id','id');
     }
 }

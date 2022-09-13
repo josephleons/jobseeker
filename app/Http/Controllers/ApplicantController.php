@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Applicant;
+use App\Models\Attachment;
+use App\Models\User;
 
 class ApplicantController extends Controller
 {
@@ -16,9 +18,11 @@ class ApplicantController extends Controller
     public function index()
     {
     //    retriev using DB query bulder
-        $applicants = DB::select('select * from applicants');
-        return view('applicant.index',['applicants'=>$applicants]);
-    }
+        // $applicants = DB::select('select * from applicants');
+        // return view('applicant.index',['applicants'=>$applicants]);
+            $users =User::all();
+            return view('applicant.index',compact('users'));
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -27,7 +31,7 @@ class ApplicantController extends Controller
      */
     public function create()
     {
-        // return view('applicant.create');
+        return view('applicant.applicant_register');
     }
 
     /**
@@ -39,36 +43,98 @@ class ApplicantController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'index'=>'required',
             'firstname'=>'required',
             'middlename'=>'required',
             'lastname'=>'required',
-            'username'=>'required',
-            'password'=>'required',
-            'email'=>'required',
-            'mobile'=>'required',
-            'physical'=>'required',
-            'photo'=>'image|nullable|max:1990',
-            'attachment'=>'image|nullable|max:1990"',
-           
-                      
+            'gender'=>'required',
+            'photo'=>'required',
+            'certificate'=>'required',
+            'letter'=>'required',
+            'cv'=>'required',
         ]);
+        // handle file to upload
+        if($request->hasFile('photo')){
+            // get filename to upload
+            $filenameWithExt =$request->file('photo')->getClientOriginalName();
+            // get just filename
+            $Filename =pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            // GET JUST EXTENT
+            $exten =$request->file('photo')->getClientOriginalExtension();
+
+            // fileToSore
+            $fileNameToStore = $Filename.'_'.time().'.'.$exten;
+            $path=$request->file('photo')->storeAs('logImage', $fileNameToStore);
+
+        }else{
+            $fileNameToStore ='noimage.jpeg';
+        }
+        // letter
+        if($request->hasFile('certificate')){
+            // get filename to upload
+            $filenameWithExt =$request->file('letter')->getClientOriginalName();
+            // get just filename
+            $Filename =pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            // GET JUST EXTENT
+            $exten =$request->file('certificate')->getClientOriginalExtension();
+
+            // fileToSore
+            $fileNameToStore = $Filename.'_'.time().'.'.$exten;
+            $path=$request->file('certificate')->storeAs('logImage', $fileNameToStore);
+
+        }else{
+            $fileNameToStore ='noimage.jpeg';
+        }
+        // cv
+        if($request->hasFile('letter')){
+            // get filename to upload
+            $filenameWithExt =$request->file('letter')->getClientOriginalName();
+            // get just filename
+            $Filename =pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            // GET JUST EXTENT
+            $exten =$request->file('letter')->getClientOriginalExtension();
+
+            // fileToSore
+            $fileNameToStore = $Filename.'_'.time().'.'.$exten;
+            $path=$request->file('letter')->storeAs('logImage', $fileNameToStore);
+
+        }else{
+            $fileNameToStore ='noimage.jpeg';
+        }
+        // cv
+        if($request->hasFile('cv')){
+            // get filename to upload
+            $filenameWithExt =$request->file('cv')->getClientOriginalName();
+            // get just filename
+            $Filename =pathinfo($filenameWithExt,PATHINFO_FILENAME);
+            // GET JUST EXTENT
+            $exten =$request->file('cv')->getClientOriginalExtension();
+
+            // fileToSore
+            $fileNameToStore = $Filename.'_'.time().'.'.$exten;
+            $path=$request->file('cv')->storeAs('logImage', $fileNameToStore);
+
+        }else{
+            $fileNameToStore ='noimage.jpeg';
+        }
         // create posty
          $applicants = new Applicant;
-         $applicants->index=$request->input('index');
          $applicants->firstname=$request->input('firstname');
          $applicants->middlename=$request->input('middlename');
          $applicants->lastname=$request->input('lastname');
-         $applicants->email=$request->input('email');
-         $applicants->mobile=$request->input('mobile');
-         $applicants->physical=$request->input('physical');
-         $applicants->username=$request->input('username');
-         $applicants->password=Hash::make($request->input('password'));
-         $applicants->photo=$request->input('photo');
-         $applicants->attachment=$request->input('attachment');
+         $applicants->gender=$request->input('gender');
+         $applicants->users_id=auth()->user()->id;
          $applicants->save();
 
+        // create attachment to applicants
+         $attachments = new Attachment;
+         $attachments->photo=$fileNameToStore;
+         $attachments->certificate=$fileNameToStore;
+         $attachments->letter=$fileNameToStore;
+         $attachments->cv=$fileNameToStore;
+         $attachments->applicants_id=$applicants->id;
+         $attachments->save();
         return redirect('/applicant')->with('success','New records is added');
+        
     }
 
     /**
@@ -79,7 +145,10 @@ class ApplicantController extends Controller
      */
     public function show($id)
     {
-        //
+
+        // $user_id=auth()->user()->id;
+        // $user =User::find($user_id);
+        // return view('applicant.myapp')->with('applicant',$user->applicant);
     }
 
     /**
@@ -114,5 +183,11 @@ class ApplicantController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function country(){
+        $districts = District::all();
+        $regions = Region::all();
+        return view('applicant.applicant_register',compact('districts','regions'));
     }
 }

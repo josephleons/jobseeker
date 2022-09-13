@@ -9,7 +9,7 @@ class Allocate extends Model
 {
     use HasFactory;
     
-    public function users(){
-        return $this->belongsTo('App\Models\User');
+    public function applicants(){
+        return $this->belongsTo('App\Models\Applicant');
     }
 }

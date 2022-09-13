@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Company;
 class PostsController extends Controller
 {
     /**
@@ -14,16 +15,13 @@ class PostsController extends Controller
      */
     public function index()
     {
-        // display job list
-        // $posts =Post::orderBy('title','desc')->get();
-        // $posts =Post::orderBy('title','desc')->paginate(1);
-        // return view('posts.index')->with('posts',$posts);
-        // display indivudual post for logged user
-        $user_id =auth()->user()->id;
-        $user=User::find($user_id);
-         return view('posts.index')->with('posts',$user->posts);
+        // $comp  = Company ::find($id);
+        // return view('company.index')->with('comp', $comp);
+        
+        $companys = Company::all();
+        return view('posts.index',compact('companys'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -32,6 +30,7 @@ class PostsController extends Controller
     public function create()
     {
         //
+       
     }
 
     /**
@@ -43,6 +42,8 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        $this->authorize('create',Post::class);
+       
         $status="pending";
         $this->validate($request,[
                 'type'=>'required',
@@ -146,14 +147,12 @@ class PostsController extends Controller
     {
         
         
-        $posts = new Post();
-        $result=$posts->find($id);
+        $company = new Company();
+        $result=$company->find($id);
         $result->delete();
 
-        return redirect('/posts')->with('success' ,'Post Remove');
+        return redirect('/posts')->with('success' ,'Company Post remove');
         //
     }
-    // public function user(){
-    //     return view('users.user_dashboard');
-    // }
+   
 }

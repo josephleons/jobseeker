@@ -48,6 +48,10 @@ class Kernel extends HttpKernel
         "VerifyMiddleware" => [
             \App\Http\Middleware\VerifyMiddleware::class,
         ],
+
+        'cOlmatejoOlmatejo'=>[
+            \App\Http\Middleware\cOlmatejoOlmatejo::class,
+        ],
     ];
 
     /**

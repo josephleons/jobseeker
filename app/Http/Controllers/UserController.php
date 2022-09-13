@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Role;
+use App\Models\Status;
 
 
 class UserController extends Controller
@@ -17,11 +19,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users =User::all();
-        return view('users.index')->with('users',$users);
+        $users = User::all();
+        return view('users.index',compact('users'));
       
     }
-
+    
+   
     
     
     /**
@@ -42,25 +45,41 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $privilage="1";
         $this->validate($request,[
-            'username'=>'required',
-            'email'=>'required',
-            'phone'=>'required',
-            'password'=>'required'
+            'name'=>'required',
+            'phone'=>'required|max:20',
+            'email'=>'required|email|unique:users',
+            'username'=>'required|unique:users|max:8',
+            'password'=>'required|min:8|same:confirmPassword',
                       
         ]);
+        DB::beginTransaction();
         // create posty
-        $user = new User;
-        $user->username=$request->input('username');
-        $user->email=$request->input('email');
-        $user->phone=$request->input('phone');
-        $user->password=Hash::make($request->input('password'));
-        $user->privilage=$privilage;
-        $user->save();
+        // $user_id=auth()->user()->id;
+        try{
+            $auto_role="Client";
+            $user = new User;
+            $user->name=$request->input('name');
+            $user->phone=$request->input('phone');
+            $user->email=$request->input('email');
+            $user->username=$request->input('username');
+            $user->password=Hash::make($request->input('password'));
+            $user->save();
 
-        return redirect('/users')->with('success','User Account Created');
 
+            $role = new Role;
+            $role->name=$auto_role;
+            $role->user_id=$user->id;
+            $role->save(); 
+            
+            DB::commit();
+            return redirect('/users')->with('success','User Added ');
+           
+        }catch(Exception $e){
+            DB::rollback();
+            return redirect()->back();
+        }
+        
     }
 
     /**
@@ -107,7 +126,6 @@ class UserController extends Controller
     {
         
     }
-    
     public function profile(){
         return view('users.profile');
     }

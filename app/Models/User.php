@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'users_id'
     ];
 
     /**
@@ -33,6 +34,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // check admin roles
+    public function is_admin(){
+        return $this->roles()->where('name','admin')->exists();
+    }
+//    check client roles
+    public function is_client(){
+        return $this->roles()->where('name','client')->exists();
+    }
     /**
      * The attributes that should be cast.
      *
@@ -53,7 +62,15 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Employee');
     }
 
-    public function allocates(){
-        return $this->hasMany('App\Models\Allocate');
+    public function applicants(){
+        return $this->hasMany(Applicant::class,'users_id');
+    
     }
+    public function roles(){
+        return $this->hasMany(Role::class,'user_id');
+    }
+
+
+
+    
 }

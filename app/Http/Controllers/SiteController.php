@@ -18,35 +18,11 @@ class SiteController extends Controller
         // return view('site.index');
     }
 
-    public function services()
-    {
-        $data = array(
-            'title'=>'Services',
-            'services'=>['GovernemtSector','Private Sector','Intenship','Part Time']
-        );
-        return view('site.services')->with($data);
-    }
-    
-    public function contact()
-    {
-        return view('site.contact');
-    }
-
-    public function about(){
-        return view('site.about');
- 
-    }
-
     public function dashboard(){
         return view('dashboard');
     }
 
-     public function applicant()
-     {
-        $applicants = Applicant::all();
-        return view('users.applicant')->with('users', $applicants);
     
-     }
      public function post(){
         $posts =Post::orderBy('title','desc')->get();
         // $posts =Post::orderBy('title','desc')->paginate(1);

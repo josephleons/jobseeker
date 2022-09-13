@@ -18,7 +18,8 @@ class VerifyMiddleware
     {
        if(session()->missing("LOGGED_IN")){
            return redirect('/denied');
-       } 
+       }
+      
         return $next($request);
     }
 }

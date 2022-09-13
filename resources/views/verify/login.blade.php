@@ -77,8 +77,10 @@
                     </div>
                     <div class="col-md-12">
                         <div class="input-group p-2 mt-2">
-                            <span class="input-group-text" id="basic-addon1">@</span>
-                            {{Form::text('email','',['class'=>'form-control','placeholder'=>'Email address'])}}
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="bi bi-person-plus"></i>
+                            </span>
+                            {{Form::text('username','',['class'=>'form-control','placeholder'=>'Username'])}}
                         </div>
                     </div>
                     <div class="col-md-12">

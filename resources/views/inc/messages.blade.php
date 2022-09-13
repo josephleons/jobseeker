@@ -8,7 +8,7 @@
 @endif
 
 @if(session('success'))
-    <div class="alert alert-success alert-dismissible">
+    <div class="alert alert-success text-muted">
         {{session('success')}}
         <button type="button" class="btn-close" data-dismiss="alert"></button>
     </div>
@@ -17,6 +17,6 @@
 @if(session('error'))
 <div class="alert alert-danger alert-dismissible">
     {{session('error')}}
-    <button type="button" class="btn-close" data-dismiss="alert"></button>
+    <button type="button" class="btn-dismiss" data-dismiss="alert"></button>
 </div>
 @endif

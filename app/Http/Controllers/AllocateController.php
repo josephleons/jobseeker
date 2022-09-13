@@ -7,6 +7,7 @@ use App\Models\Allocate;
 use App\Models\Employee;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Applicant;
 
 class AllocateController extends Controller
 {
@@ -23,11 +24,15 @@ class AllocateController extends Controller
     }
         public function allocateList()
         {
-            $user_id=auth()->user()->id;
-            $user =User::find($user_id);
-            return view('allocate.allocateList')->with('allocates',$user->allocates);
+                if(auth()->user()) {
+                $applicant_id=auth()->user()->id;
+                $applicants =Applicant::find($applicant_id);
+                return view('allocate.allocateList')->with('allocations',$applicants->allocations);
+             }else{
+                 abort('404');
+             }
+           
         }
-
 
     /**
      * Show the form for creating a new resource.
@@ -49,27 +54,20 @@ class AllocateController extends Controller
 
     {
         $this->validate($request,[
-            'index'=>'required',
-            'fisrtname'=>'required',
-            'middlename'=>'required',
-            'lastname'=>'required',
             'gender'=>'required',
-            'mobile'=>'required',
-            'email'=>'required',
-            'allocateTo'=>'required',           
-        ]);
+            'middlename'=>'required',
+            'allocateTo'=>'required',
+          
+       ]);
 
-        // insert data to allocate table(models)
-            $allocates->index=$request->input('index');
-            $allocates->fisrtname=$request->input('fisrtname');
-            $allocates->middlename=$request->input('middlename');
-            $allocates->lastname=$request->input('lastname');
-            $allocates->gender=$request->input('gender');
-            $allocates->mobile =$request->input('mobile');
-            $allocates->email=$request->input('email');
-            $allocates->allocateTo=$request->input('allocate');
-            $allocates->user_id=auth()->user()->id;
-            $allocates->save();
+       $allocate =new Allocate;
+       $allocate->gender=$request->input('gender');
+       $allocate->allocateTo=$request->input('allocateTo');
+       $allocate->middlename=$request->input('middlename');
+       $allocate->user_id=auth()->user()->id;
+       $allocate->save();
+       return redirect('/allocate')->with('success' ,'Employee Allocated success');
+    
     }
 
     /**
@@ -94,6 +92,8 @@ class AllocateController extends Controller
     public function edit($id)
     {
         //
+         $employees = Employee::find($id);
+         return view('allocate.edit')->with('employees',$employees);
     }
 
     /**
@@ -105,7 +105,19 @@ class AllocateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+             'gender'=>'required',
+             'middlename'=>'required',
+             'allocateTo'=>'required',
+           
+        ]);
+
+        $allocate =Allocate::find($id);
+        $allocate->gender=$request->input('gender');
+        $allocate->allocateTo=$request->input('allocateTo');
+        $allocate->middlename=$request->input('middlename');
+        $allocate->save();
+        return redirect('/allocate')->with('success' ,'Employee Allocated success');
     }
 
     /**

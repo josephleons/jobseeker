@@ -38,12 +38,12 @@
             <li class="nav-item dropdown text-muted"style="list-style:none" >
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                 </a>
-            <ul class="dropdown-menu" style="text-transform:lowercase">
-                <a class="dropdown-item" href="{{url('/profile')}}">Profile<i class="bi bi-person-square ml-5"></i></a>
-                <a class="dropdown-item mt-1" href="#">Setting<i class="bi bi-sliders ml-5"></i></a>
-                <a class="dropdown-item mt-1" href="#">Preference<i class="fas fa-user ml-4"></i></a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item mt-1" href="{{('/logout')}}">Logout<i class="bi bi-box-arrow-left ml-5"></i></a>
+                <ul class="dropdown-menu" style="text-transform:lowercase">
+                    <a class="dropdown-item" href="{{url('/profile')}}">Profile<i class="bi bi-person-square ml-5"></i></a>
+                    <a class="dropdown-item mt-1" href="#">Setting<i class="bi bi-sliders ml-5"></i></a>
+                    <a class="dropdown-item mt-1" href="#">Preference<i class="fas fa-user ml-4"></i></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item mt-1" href="{{('/logout')}}">Logout<i class="bi bi-box-arrow-left ml-5"></i></a>
                @endif
             </ul>
         </li>

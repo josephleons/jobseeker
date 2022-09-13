@@ -9,6 +9,11 @@ class Applicant extends Model
 {
     use HasFactory;
     // to change primary key
-    protected $primaryKey ='index';
-    public $incrementing =false;
+
+    public function allocates(){
+        return $this->hasOne('App\Models\Allocate');
+    }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

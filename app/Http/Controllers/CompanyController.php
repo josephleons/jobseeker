@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Department;
+use App\Models\Address;
 
 class CompanyController extends Controller
 {
@@ -14,13 +16,10 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-    //   $companys = Company::orderBy('title','desc')->get();
-    //     return view('company.index')->with('companys', $companys);
-    //     return view('company.index');
-        $user_id =auth()->user()->id;
-        $user=User::find($user_id);
-         return view('company.index')->with('companys',$user->companys);
-    }
+         // return all company instance
+      $companys = Company::orderBy('name','desc')->get();
+        return view('company.index')->with('companys', $companys);
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -42,18 +41,15 @@ class CompanyController extends Controller
     {
        
         $this->validate($request,[
-            'type'=>'required',
-            'regNo'=>'required',
-            'title'=>'required',
-            'email'=>'required',
-            'desc'=>'required',
+            'name'=>'required',
+            'registration'=>'required|unique:companies',
             'location'=>'required',
+            'description'=>'required',
             'logo'=>'image|nullable|max:1999',
             
         ]);
-       
-        // handle file upload
-        if($request->hasFile('logo')){
+         // handle file upload
+         if($request->hasFile('logo')){
             // get filename to upload
             $filenameWithExt =$request->file('logo')->getClientOriginalName();
             // get just filename
@@ -68,19 +64,22 @@ class CompanyController extends Controller
         }else{
             $fileNameToStore ='noimage.jpeg';
         }
-        // create post
+
+        // register company
         $companys=new Company;
-        $companys->type=$request->input('type');
-        $companys->regNo=$request->input('regNo');
-        $companys->title=$request->input('title');
-        $companys->email=$request->input('email');
-        $companys->desc=$request->input('desc');
+        $companys->name=$request->input('name');
+        $companys->registration=$request->input('registration');
         $companys->location=$request->input('location');
+        $companys->description=$request->input('description');
         $companys->logo = $fileNameToStore;
-        $company->user_id =auth()->user()->id;
+        if(auth()->user()){
+            $companys->users_id=auth()->user()->id;
+        }else{
+            abort('404');
+        }
         $companys->save();
         return redirect('/company')->with('success','Company Registered');
-    
+      
     }
 
     /**
@@ -93,7 +92,7 @@ class CompanyController extends Controller
     {
         //
         $comp  = Company ::find($id);
-        return view('company.show')->with('comp', $comp);
+        return view('company.index')->with('comp', $comp);
     }
 
     /**

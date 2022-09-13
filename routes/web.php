@@ -16,6 +16,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AllocateController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -64,6 +65,11 @@ Route::get('delete/{id}',[DeleteController::class,'delete']);
 Route::resource('users',UserController::class);
 Route::get('account',[UserController::class,'account']);
 Route::post('/users',[UserController::class,'store']);
+
+Route::controller(UserController::class)->group(function(){
+    // Route::get('/users','role_depart');
+
+});
 // Route::post('/users',[UserController::class,'index']);
 
 // middleware for authentication
@@ -75,6 +81,9 @@ Route::group(['middleware'=>'VerifyMiddleware'], function(){
 
 Route::get('/dashboard',[WelcomeConctroller::class,'dashboard']);
 
+// admin dashboard
+Route::get('/admin',[AdminController::class,'index']);
+
 // profile
 Route::get('/profile',[UserController::class,'profile']);
 
@@ -82,32 +91,55 @@ Route::get('/profile',[UserController::class,'profile']);
 Route::get('/user_form',[UserController::class,'user_send']);
 Route::get('/add_user',[UserController::class,'create']);
 
-// company controller
-Route::resource('company',CompanyController::class);
 // company_form
-Route::get('/company',[CompanyController::class ,'index']);
-Route::get('destroy/{id}',[CompanyController::class ,'destroy']);
-Route::post('/company',[CompanyController::class ,'store']);
-Route::get('/show/{id}',[CompanyController::class ,'show']);
+Route::controller(CompanyController::class)->group(function(){
+    Route::resource('company',CompanyController::class);
+    Route::get('/company','index');
+    Route::delete('destroy/{id}','destroy');
+    Route::post('/company','store');
+    Route::get('/show/{id}','show');
+});
 
-Route::resource('/applicant',ApplicantController::class);
-// Route::get('applicant',[ApplicantController::class,'index']);
-Route::post('applicant',[ApplicantController::class,'store']);
+//applicant controller
+Route::controller(ApplicantController::class)->group(function(){
+    Route::resource('/applicant',ApplicantController::class);
+    Route::get('/applicant_register','create');
+    Route::post('/applicant_register','store');
+    // Route::get('/myapp','index');
+});
 
-// Route::resource('employee',EmployeeController::class);
-Route::get('employee',[EmployeeController::class,'create']);
-Route::post('employee',[EmployeeController::class,'store']);
-Route::get('/myapp',[EmployeeController::class,'index']);
-Route::get('/profile',[EmployeeController::class,'profile']);
-Route::get('employee',[EmployeeController::class,'country']);
-Route::get('allocate',[EmployeeController::class,'companys']);
+// EmployeeController
+// Route::controller(EmployeeController::class)->group(function(){
+//     // Route::get('employee','create');
+//     Route::post('employee','store');
+    
+//     Route::get('/profile','profile');
+//     Route::get('employee','country');
+//     Route::get('allocate','companys');
 
-Route::resource('site',FeedbackController::class);
-Route::get('/',[FeedbackController::class,'index']);
-Route::post('/',[FeedbackController::class,'store']);
+// });
 
-Route::resource('allocate',AllocateController::class);
-// Route::get('allocate',[AllocateController::class,'companys']);
-Route::get('/show/{id}',[AllocateController::class,'show']);
-Route::post('/show{id}',[AllocateController::class,'store']);
-Route::get('/allocateList',[AllocateController::class,'allocateList']);
+//allocated controller
+
+Route::controller(AllocateController::class)->group(function(){
+    Route::get('/edit/{id}','edit');
+    Route::post('/edit/{id}','store');
+    Route::get('/allocateList','allocateList');
+});
+
+
+//FeedbackController
+Route::controller(FeedbackController::class)->group(function(){
+    Route::resource('site',FeedbackController::class);
+    Route::get('/','index');
+    Route::post('/','store');
+});
+
+// Group middleware
+Route::group(['middleware'=>'auth'],function(){
+    Route::resource('allocate',AllocateController::class);
+    Route::get('/edit/{id}',[AllocateController::class,'edit']);
+    Route::post('/edit/{id}',[AllocateController::class,'store']);
+    Route::get('/allocateList',[AllocateController::class,'allocateList']);
+
+});
